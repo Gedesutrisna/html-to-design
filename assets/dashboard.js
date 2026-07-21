@@ -131,22 +131,27 @@
     const fields = {
       duration: estimatorForm.querySelector("[name='duration']"),
       workers: estimatorForm.querySelector("[name='workers']"),
-      distance: estimatorForm.querySelector("[name='distance']"),
-      skill: estimatorForm.querySelector("[name='skill_level']"),
-      risk: estimatorForm.querySelector("[name='risk_level']"),
-      schedule: estimatorForm.querySelector("[name='schedule_type']"),
-      customWage: estimatorForm.querySelector("[name='custom_wage']"),
+      startTime: estimatorForm.querySelector("[name='start_time']"),
+      shiftTime: estimatorForm.querySelector("[name='shift_time']"),
+      additionalWage: estimatorForm.querySelector("[name='additional_wage']"),
     };
 
     const outputs = {
       recommended: document.querySelector("[data-estimate-recommended]"),
       range: document.querySelector("[data-estimate-range]"),
       duration: document.querySelector("[data-estimate-duration]"),
-      risk: document.querySelector("[data-estimate-risk]"),
-      distance: document.querySelector("[data-estimate-distance]"),
-      skill: document.querySelector("[data-estimate-skill]"),
+      score: document.querySelector("[data-estimate-score]"),
+      adjustment: document.querySelector("[data-estimate-adjustment]"),
+      shift: document.querySelector("[data-estimate-shift]"),
+      additional: document.querySelector("[data-estimate-additional]"),
+      multiplication: document.querySelector("[data-estimate-multiplication]"),
       total: document.querySelector("[data-estimate-total]"),
-      hidden: estimatorForm.querySelector("[name='recommended_wage']"),
+      shiftLabel: document.querySelector("[data-shift-label]"),
+      shiftDescription: document.querySelector("[data-shift-description]"),
+      shiftStatus: document.querySelector("[data-shift-status]"),
+      recommendedHidden: estimatorForm.querySelector("[name='recommended_wage']"),
+      finalHidden: estimatorForm.querySelector("[name='final_wage_per_worker']"),
+      scoreHidden: estimatorForm.querySelector("[name='risk_score']"),
     };
 
     const idr = new Intl.NumberFormat("id-ID", {
@@ -155,41 +160,89 @@
       maximumFractionDigits: 0,
     });
 
-    const riskLabels = { low: "Rendah", medium: "Sedang", high: "Tinggi" };
-    const skillLabels = { basic: "Dasar", skilled: "Terampil", expert: "Ahli" };
+    // Nilai ini hanya fallback prototipe. Ganti hasil calculatePrototypeWage()
+    // dengan response API model Machine Learning pada implementasi produksi.
+    const BASE_HOURLY_WAGE = 22000;
+    const SCORE_RATE = 0.06;
+    const PLATFORM_FLOOR = 60000;
+    const ROUNDING_UNIT = 5000;
+
+    const roundWage = (value) => Math.round(value / ROUNDING_UNIT) * ROUNDING_UNIT;
+
+    const getRadioScore = (name) => {
+      const selected = estimatorForm.querySelector(`[name='${name}']:checked`);
+      return Math.max(0, Number(selected?.value) || 0);
+    };
+
+    const getShift = (startTime, durationHours) => {
+      const [hours, minutes] = String(startTime || "08:00")
+        .split(":")
+        .map((part) => Number(part) || 0);
+      const startMinutes = hours * 60 + minutes;
+      const endMinutes = startMinutes + durationHours * 60;
+      const isNormal = startMinutes >= 6 * 60 && endMinutes <= 18 * 60;
+
+      return {
+        value: isNormal ? "normal" : "night",
+        score: isNormal ? 0 : 2,
+        label: isNormal ? "Jam normal" : "Shift malam",
+        description: isNormal
+          ? "Seluruh durasi berada di antara 06.00–18.00."
+          : "Waktu kerja berada atau melintasi pukul 18.00–06.00.",
+      };
+    };
+
+    const calculatePrototypeWage = ({ duration, objectiveScore }) => {
+      const baseWage = duration * BASE_HOURLY_WAGE;
+      const adjustmentRate = objectiveScore * SCORE_RATE;
+      const predicted = baseWage * (1 + adjustmentRate);
+      return Math.max(PLATFORM_FLOOR, roundWage(predicted));
+    };
 
     const calculate = () => {
       const duration = Math.max(1, Number(fields.duration?.value) || 1);
       const workers = Math.max(1, Number(fields.workers?.value) || 1);
-      const distance = Math.max(0, Number(fields.distance?.value) || 0);
-      const skill = fields.skill?.value || "basic";
-      const risk = fields.risk?.value || "low";
-      const schedule = fields.schedule?.value || "normal";
+      const additionalWage = Math.max(0, Number(fields.additionalWage?.value) || 0);
+      const shift = getShift(fields.startTime?.value, duration);
 
-      const hourlyBase = 22000;
-      const skillMultiplier = { basic: 1, skilled: 1.24, expert: 1.55 }[skill];
-      const riskMultiplier = { low: 1, medium: 1.16, high: 1.34 }[risk];
-      const scheduleMultiplier = { normal: 1, urgent: 1.18, night: 1.25 }[schedule];
-      const travelAllowance = Math.min(distance, 35) * 1800;
-      const platformFloor = 60000;
+      const indicatorScore =
+        getRadioScore("effort_level") +
+        getRadioScore("weight_load") +
+        getRadioScore("vertical_hazard") +
+        getRadioScore("material_hazard") +
+        getRadioScore("environment_space");
 
-      let perWorker = duration * hourlyBase * skillMultiplier * riskMultiplier * scheduleMultiplier + travelAllowance;
-      perWorker = Math.max(platformFloor, Math.round(perWorker / 5000) * 5000);
+      const objectiveScore = indicatorScore + shift.score;
+      const adjustmentRate = objectiveScore * SCORE_RATE;
+      const recommendedPerWorker = calculatePrototypeWage({ duration, objectiveScore });
+      const finalPerWorker = recommendedPerWorker + additionalWage;
+      const totalBudget = finalPerWorker * workers;
+      const low = roundWage(recommendedPerWorker * 0.9);
+      const high = roundWage(recommendedPerWorker * 1.12);
 
-      const custom = Number(fields.customWage?.value) || 0;
-      const applied = custom > 0 ? custom : perWorker;
-      const total = applied * workers;
-      const low = Math.round((perWorker * 0.9) / 5000) * 5000;
-      const high = Math.round((perWorker * 1.12) / 5000) * 5000;
+      if (fields.shiftTime) fields.shiftTime.value = shift.value;
 
-      if (outputs.recommended) outputs.recommended.textContent = idr.format(perWorker);
-      if (outputs.range) outputs.range.textContent = `Rentang wajar ${idr.format(low)} – ${idr.format(high)}`;
-      if (outputs.duration) outputs.duration.textContent = `${duration} jam × ${idr.format(hourlyBase)}`;
-      if (outputs.risk) outputs.risk.textContent = `${riskLabels[risk]} (${Math.round((riskMultiplier - 1) * 100)}%)`;
-      if (outputs.distance) outputs.distance.textContent = `${distance.toLocaleString("id-ID")} km · ${idr.format(travelAllowance)}`;
-      if (outputs.skill) outputs.skill.textContent = skillLabels[skill];
-      if (outputs.total) outputs.total.textContent = idr.format(total);
-      if (outputs.hidden) outputs.hidden.value = perWorker;
+      if (outputs.recommended) outputs.recommended.textContent = idr.format(finalPerWorker);
+      if (outputs.range) outputs.range.textContent = `Rentang rekomendasi sistem ${idr.format(low)} – ${idr.format(high)}`;
+      if (outputs.duration) outputs.duration.textContent = `${duration} jam × ${idr.format(BASE_HOURLY_WAGE)}`;
+      if (outputs.score) outputs.score.textContent = `${objectiveScore} poin`;
+      if (outputs.adjustment) outputs.adjustment.textContent = `+${Math.round(adjustmentRate * 100)}%`;
+      if (outputs.shift) outputs.shift.textContent = `${shift.label} (+${shift.score} poin)`;
+      if (outputs.additional) outputs.additional.textContent = idr.format(additionalWage);
+      if (outputs.multiplication) outputs.multiplication.textContent = `${workers} orang × ${idr.format(finalPerWorker)}`;
+      if (outputs.total) outputs.total.textContent = idr.format(totalBudget);
+
+      if (outputs.shiftLabel) outputs.shiftLabel.textContent = shift.label;
+      if (outputs.shiftDescription) outputs.shiftDescription.textContent = shift.description;
+      if (outputs.shiftStatus) {
+        outputs.shiftStatus.classList.toggle("is-night", shift.value === "night");
+        const icon = outputs.shiftStatus.querySelector(".material-symbols-rounded");
+        if (icon) icon.textContent = shift.value === "night" ? "dark_mode" : "light_mode";
+      }
+
+      if (outputs.recommendedHidden) outputs.recommendedHidden.value = String(recommendedPerWorker);
+      if (outputs.finalHidden) outputs.finalHidden.value = String(finalPerWorker);
+      if (outputs.scoreHidden) outputs.scoreHidden.value = String(objectiveScore);
     };
 
     estimatorForm.addEventListener("input", calculate);
@@ -198,7 +251,7 @@
 
     estimatorForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      showToast("Lowongan siap dipublikasikan", "Data valid dan rekomendasi upah sudah dihitung.");
+      showToast("Lowongan siap dipublikasikan", "Upah per pekerja dan total anggaran sudah dihitung.");
     });
 
     estimatorForm.querySelectorAll("[data-save-draft]").forEach((button) => {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="Form pembuatan lowongan baru dengan saran upah berdasarkan rincian tugas, risiko, keterampilan, jarak, dan durasi." name="description"/>
+<meta content="Form pembuatan lowongan baru dengan estimasi upah per pekerja berdasarkan durasi dan indikator objektif beban serta risiko kerja." name="description"/>
 <title>Buat Lowongan Baru | Mekard Pemberi Kerja</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -99,7 +99,7 @@
 <div class="content-header__copy">
 <p class="kicker">Publikasikan kebutuhan pekerja</p>
 <h2 id="create-title">Jelaskan tugasnya, Mekard menghitung upah wajarnya.</h2>
-<p>Ceritakan pekerjaannya dengan jelas. Saran upah akan menyesuaikan durasi, risiko, keterampilan, jadwal, dan jarak.</p>
+<p>Ceritakan pekerjaannya dengan jelas. Saran upah dihitung per pekerja berdasarkan durasi, beban fisik, kondisi kerja, alat, dan jadwal.</p>
 </div>
 <div class="content-header__actions">
 <a class="button button--outline" href="../../dashboard/">
@@ -154,26 +154,25 @@
 <div class="char-count" id="description-count">0/500</div>
 </div>
 <div class="field field--full">
-<span class="field__label">Peralatan atau kondisi khusus</span>
+<span class="field__label">Persyaratan dan perlindungan kerja</span>
 <div class="check-grid">
-<label class="check-card"><input checked="" type="checkbox"/><span>Aktivitas fisik berat</span></label>
-<label class="check-card"><input checked="" type="checkbox"/><span>APD disediakan pemberi kerja</span></label>
-<label class="check-card"><input type="checkbox"/><span>Butuh sertifikat khusus</span></label>
-<label class="check-card"><input checked="" type="checkbox"/><span>Area kerja outdoor</span></label>
+<label class="check-card"><input checked="" name="ppe_provided" type="checkbox"/><span>APD disediakan pemberi kerja</span></label>
+<label class="check-card"><input name="certificate_required" type="checkbox"/><span>Butuh sertifikat khusus</span></label>
 </div>
+<div class="field__help">Beban fisik dan kondisi lokasi diisi melalui indikator objektif pada bagian kalkulasi upah.</div>
 </div>
 </div>
 </section>
 <section aria-labelledby="schedule-section-title" class="form-section">
 <header class="form-section__header">
 <span aria-hidden="true" class="form-section__icon material-symbols-rounded">location_on</span>
-<div><h3 id="schedule-section-title">Lokasi &amp; Jadwal</h3><p>Dipakai untuk menghitung jarak dan tambahan biaya perjalanan.</p></div>
+<div><h3 id="schedule-section-title">Lokasi &amp; Jadwal</h3><p>Lokasi dipakai untuk menampilkan jarak kepada calon pekerja, bukan untuk menambah upah.</p></div>
 </header>
 <div class="form-grid">
 <div class="field field--full">
 <label for="address">Alamat lokasi kerja</label>
 <input class="input" id="address" name="address" type="text" value="Jl. Mahendradata No. 18, Denpasar Barat, Bali"/>
-<div class="field__help">Pada implementasi produksi, bidang ini dapat terhubung ke peta dan geocoding.</div>
+<div class="field__help">Pada implementasi produksi, bidang ini dapat terhubung ke peta dan geocoding agar pekerja dapat melihat jarak tempuhnya.</div>
 </div>
 <div class="field">
 <label for="job-date">Tanggal mulai</label>
@@ -188,44 +187,84 @@
 <div class="input-group"><input class="input has-suffix" id="duration" max="24" min="1" name="duration" type="number" value="5"/><span class="input-group__suffix">jam</span></div>
 </div>
 <div class="field">
-<label for="distance">Rata-rata jarak pekerja</label>
-<div class="input-group"><input class="input has-suffix" id="distance" max="100" min="0" name="distance" step="0.5" type="number" value="6.5"/><span class="input-group__suffix">km</span></div>
+<span class="field__label">Klasifikasi waktu kerja</span>
+<div class="shift-status" data-shift-status="">
+<span aria-hidden="true" class="material-symbols-rounded">light_mode</span>
+<div><strong data-shift-label="">Jam normal</strong><small data-shift-description="">Seluruh durasi berada di antara 06.00–18.00.</small></div>
 </div>
-<div class="field field--full">
-<span class="field__label">Tipe jadwal</span>
-<div class="segmented">
-<label><input checked="" name="schedule_type" type="radio" value="normal"/><span>Normal</span></label>
-<label><input name="schedule_type" type="radio" value="urgent"/><span>Mendesak</span></label>
-<label><input name="schedule_type" type="radio" value="night"/><span>Shift malam</span></label>
+<input name="shift_time" type="hidden" value="normal"/>
 </div>
-</div>
+<div class="field field--full"><div class="system-note"><span aria-hidden="true" class="material-symbols-rounded">schedule</span><span>Sistem menentukan jam normal atau shift malam secara otomatis dari jam mulai dan durasi kerja.</span></div></div>
 </div>
 </section>
 <section aria-labelledby="wage-section-title" class="form-section">
 <header class="form-section__header">
 <span aria-hidden="true" class="form-section__icon material-symbols-rounded">payments</span>
-<div><h3 id="wage-section-title">Upah, Risiko &amp; Kebutuhan Pekerja</h3><p>Mekard memakai rincian ini untuk memberi saran kisaran upah.</p></div>
+<div><h3 id="wage-section-title">Indikator Beban Kerja &amp; Kebutuhan Pekerja</h3><p>Isi kondisi faktual pekerjaan. Mekard menghitung estimasi upah untuk satu pekerja.</p></div>
 </header>
 <div class="form-grid">
 <div class="field">
 <label for="workers">Berapa pekerja yang dibutuhkan?</label>
 <div class="input-group"><input class="input has-suffix" id="workers" max="100" min="1" name="workers" type="number" value="8"/><span class="input-group__suffix">orang</span></div>
+<div class="field__help">Jumlah pekerja tidak memengaruhi upah per orang; hanya dipakai untuk menghitung total anggaran.</div>
 </div>
 <div class="field">
-<label for="risk-level">Tingkat risiko kerja</label>
-<select class="select" id="risk-level" name="risk_level">
-<option value="low">Rendah</option>
-<option selected="" value="medium">Sedang</option>
-<option value="high">Tinggi</option>
-</select>
+<label for="additional-wage">Tambahan upah per pekerja <small>(opsional)</small></label>
+<div class="input-group"><span class="input-group__prefix">Rp</span><input class="input has-prefix" id="additional-wage" min="0" name="additional_wage" placeholder="0" step="5000" type="number"/></div>
+<div class="field__help">Tambahan ini berada di atas rekomendasi Mekard dan tidak dapat menguranginya.</div>
 </div>
-<div class="field field--full">
-<label for="custom-wage">Upah yang ingin ditawarkan <small>(opsional)</small></label>
-<div class="input-group"><span class="input-group__prefix">Rp</span><input class="input has-prefix" id="custom-wage" min="0" name="custom_wage" placeholder="Gunakan saran Mekard" step="5000" type="number"/></div>
-<div class="field__help">Kosongkan untuk memakai saran upah dari Mekard.</div>
+
+<fieldset class="indicator-fieldset field--full">
+<legend>Aktivitas fisik</legend>
+<p class="indicator-help">Pilih aktivitas yang paling dominan selama pekerjaan.</p>
+<div class="indicator-grid indicator-grid--3">
+<label class="indicator-card"><input name="effort_level" type="radio" value="1"/><span><strong>Ringan</strong><small>Dominan duduk, berdiri santai, atau berjalan minimal.</small><em>1 poin</em></span></label>
+<label class="indicator-card"><input name="effort_level" type="radio" value="2"/><span><strong>Sedang</strong><small>Berjalan konstan, membungkuk sesekali, atau memindahkan barang ringan.</small><em>2 poin</em></span></label>
+<label class="indicator-card"><input checked="" name="effort_level" type="radio" value="4"/><span><strong>Berat</strong><small>Mengangkat konstan, memanjat, merangkak, atau mencangkul.</small><em>4 poin</em></span></label>
 </div>
-<div class="field field--full"><div class="system-note"><span aria-hidden="true" class="material-symbols-rounded">handshake</span><span>Mekard membantu memberi saran upah. Cara dan waktu pembayaran dibicarakan langsung dengan pekerja di luar Mekard.</span></div></div>
+</fieldset>
+
+<fieldset class="indicator-fieldset field--full">
+<legend>Berat objek yang ditangani</legend>
+<p class="indicator-help">Gunakan berat objek yang paling sering dipindahkan.</p>
+<div class="indicator-grid indicator-grid--3">
+<label class="indicator-card"><input name="weight_load" type="radio" value="1"/><span><strong>Di bawah 5 kg</strong><small>Alat pel, pakaian, atau kantong belanja kecil.</small><em>1 poin</em></span></label>
+<label class="indicator-card"><input name="weight_load" type="radio" value="2"/><span><strong>5–15 kg</strong><small>Galon, koper, atau kardus ukuran sedang.</small><em>2 poin</em></span></label>
+<label class="indicator-card"><input checked="" name="weight_load" type="radio" value="4"/><span><strong>Di atas 15 kg</strong><small>Karung, sofa, kulkas, atau material bangunan.</small><em>4 poin</em></span></label>
+</div>
+</fieldset>
+
+<fieldset class="indicator-fieldset field--full">
+<legend>Ketinggian atau kedalaman</legend>
+<div class="indicator-grid indicator-grid--3">
+<label class="indicator-card"><input checked="" name="vertical_hazard" type="radio" value="0"/><span><strong>Level dasar</strong><small>Kaki tetap menapak di lantai atau tanah normal.</small><em>0 poin</em></span></label>
+<label class="indicator-card"><input name="vertical_hazard" type="radio" value="1"/><span><strong>Level sedang</strong><small>Menggunakan tangga pendek dengan ketinggian di bawah 2,5 meter.</small><em>1 poin</em></span></label>
+<label class="indicator-card"><input name="vertical_hazard" type="radio" value="3"/><span><strong>Level ekstrem</strong><small>Atap, pohon, sumur, lubang, atau membutuhkan tali pengaman.</small><em>3 poin</em></span></label>
+</div>
+</fieldset>
+
+<fieldset class="indicator-fieldset field--full">
+<legend>Alat dan bahan kerja</legend>
+<div class="indicator-grid indicator-grid--3">
+<label class="indicator-card"><input checked="" name="material_hazard" type="radio" value="0"/><span><strong>Aman</strong><small>Perkakas manual atau alat rumah tangga biasa.</small><em>0 poin</em></span></label>
+<label class="indicator-card"><input name="material_hazard" type="radio" value="1"/><span><strong>Risiko sedang</strong><small>Alat listrik ringan atau bahan kimia rumah tangga standar.</small><em>1 poin</em></span></label>
+<label class="indicator-card"><input name="material_hazard" type="radio" value="3"/><span><strong>Risiko ekstrem</strong><small>Listrik aktif, mesin potong cepat, api, las, atau bahan industri.</small><em>3 poin</em></span></label>
+</div>
+</fieldset>
+
+<fieldset class="indicator-fieldset field--full">
+<legend>Kondisi udara dan ruang</legend>
+<div class="indicator-grid indicator-grid--3">
+<label class="indicator-card"><input name="environment_space" type="radio" value="0"/><span><strong>Ruang normal</strong><small>Ventilasi baik atau area luar yang teduh.</small><em>0 poin</em></span></label>
+<label class="indicator-card"><input checked="" name="environment_space" type="radio" value="1"/><span><strong>Cuaca langsung</strong><small>Terpapar langsung terik matahari atau hujan.</small><em>1 poin</em></span></label>
+<label class="indicator-card"><input name="environment_space" type="radio" value="3"/><span><strong>Terbatas / pengap</strong><small>Sempit, berdebu, berasap, tanpa ventilasi, atau bersuhu ekstrem.</small><em>3 poin</em></span></label>
+</div>
+</fieldset>
+
+<div class="field field--full"><div class="system-note"><span aria-hidden="true" class="material-symbols-rounded">psychology</span><span>Pada produksi, indikator ini dikirim ke model Machine Learning. Kalkulasi di prototipe ini mensimulasikan hasil model agar alur antarmuka dapat diuji.</span></div></div>
 <input name="recommended_wage" type="hidden"/>
+<input name="final_wage_per_worker" type="hidden"/>
+<input name="risk_score" type="hidden"/>
 </div>
 </section>
 <footer class="form-footer">
@@ -240,20 +279,25 @@
 <aside aria-labelledby="estimator-title" class="card estimator">
 <div class="estimator__hero">
 <p class="kicker">Saran upah dari Mekard</p>
-<h3 id="estimator-title">Estimasi upah wajar</h3>
-<strong class="estimator__value" data-estimate-recommended="">Rp 0 <small>/ pekerja</small></strong>
+<h3 id="estimator-title">Estimasi upah per pekerja</h3>
+<strong class="estimator__value"><span data-estimate-recommended="">Rp 0</span> <small>/ pekerja</small></strong>
 <span class="estimator__range" data-estimate-range="">Rentang wajar sedang dihitung...</span>
 </div>
 <div class="estimator__body">
 <div class="estimator-row"><span>Durasi dasar</span><strong data-estimate-duration="">—</strong></div>
-<div class="estimator-row"><span>Tingkat keterampilan</span><strong data-estimate-skill="">—</strong></div>
-<div class="estimator-row"><span>Penyesuaian risiko</span><strong data-estimate-risk="">—</strong></div>
-<div class="estimator-row"><span>Kompensasi jarak</span><strong data-estimate-distance="">—</strong></div>
+<div class="estimator-row"><span>Poin beban &amp; risiko</span><strong data-estimate-score="">—</strong></div>
+<div class="estimator-row"><span>Penyesuaian indikator</span><strong data-estimate-adjustment="">—</strong></div>
+<div class="estimator-row"><span>Waktu kerja</span><strong data-estimate-shift="">—</strong></div>
+<div class="estimator-row"><span>Tambahan pemberi kerja</span><strong data-estimate-additional="">Rp 0</strong></div>
+<div class="estimator-multiplication">
+<span>Kebutuhan pekerja</span>
+<strong data-estimate-multiplication="">—</strong>
+</div>
 <div class="estimator-total">
 <div><span>Estimasi total anggaran</span><strong data-estimate-total="">Rp 0</strong></div>
 <span aria-hidden="true" class="material-symbols-rounded text-orange">calculate</span>
 </div>
-<p class="estimator-note"><span aria-hidden="true" class="material-symbols-rounded">info</span><span>Saran upah dapat berubah mengikuti lokasi dan rincian pekerjaan yang diisi.</span></p>
+<p class="estimator-note"><span aria-hidden="true" class="material-symbols-rounded">info</span><span>Upah dihitung per pekerja. Total anggaran adalah upah per pekerja dikalikan jumlah pekerja. Jarak tidak menambah upah.</span></p>
 </div>
 </aside>
 </form>
