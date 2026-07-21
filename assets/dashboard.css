@@ -1188,7 +1188,6 @@ body[data-sidebar="hidden"] .main-shell {
   grid-template-columns: repeat(4, 1fr);
   margin-bottom: 18px;
   padding: 8px;
-  gap: 4px;
 }
 
 .stepper__item {
@@ -3873,3 +3872,124 @@ body[data-sidebar="compact"] .brand__mark {
   }
 }
 
+
+
+/* Jobs list page */
+.job-list-stats {
+  margin-bottom: 18px;
+}
+
+.job-list-card {
+  overflow: hidden;
+}
+
+.job-list-header {
+  align-items: center;
+}
+
+.job-list-header [data-job-result] {
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.job-list-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(170px, 220px) auto;
+  gap: 10px;
+  padding: 15px 18px;
+  background: #fdfcf9;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.job-list-table {
+  min-width: 1180px;
+}
+
+.table-meta,
+.wage-cell span,
+.budget-cell span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.wage-cell,
+.budget-cell {
+  min-width: 145px;
+}
+
+.wage-cell strong,
+.budget-cell strong {
+  white-space: nowrap;
+}
+
+.job-table-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.job-table-actions .material-symbols-rounded {
+  font-size: 17px;
+}
+
+.job-list-empty {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  padding: 32px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.job-list-empty > .material-symbols-rounded {
+  font-size: 36px;
+  color: var(--orange);
+}
+
+.job-list-empty strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.job-list-empty span:last-child {
+  font-size: 11px;
+}
+
+/* Detail page: make objective indicators easier to scan */
+.detail-list div {
+  min-height: 42px;
+}
+
+.detail-list strong {
+  max-width: 58%;
+}
+
+.applicant-fact strong {
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .job-list-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .job-list-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .job-list-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .job-list-toolbar .button {
+    width: 100%;
+  }
+}

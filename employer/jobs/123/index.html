@@ -1,9 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="Halaman pemberi kerja untuk melihat pelamar, membandingkan saran upah, dan memilih pekerja." name="description"/>
+<meta content="Halaman pemberi kerja untuk mengelola lowongan, memilih pekerja, dan melihat upah per pekerja yang transparan." name="description"/>
 <title>Pilih Pekerja &amp; Kelola Lowongan | Mekard Pemberi Kerja</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -14,7 +15,7 @@
 <div class="app-shell">
 <aside aria-label="Navigasi pemberi kerja" class="sidebar">
 <div class="sidebar__header">
-<a aria-label="Mekard, buka dashboard pemberi kerja" class="brand" href="../../dashboard/"><img alt="" aria-hidden="true" class="brand__mark" height="197" src="../../../assets/mekard-mark.png" width="197"/><span class="brand__word">mekard.</span></a>
+<a aria-label="Mekard, buka dashboard pemberi kerja" class="brand" href="../../dashboard/"><span aria-hidden="true" class="brand__symbol">m</span><span class="brand__word">mekard.</span></a>
 <button aria-label="Perkecil sidebar" class="sidebar__quick-toggle" data-sidebar-close="" type="button">
 <span aria-hidden="true" class="material-symbols-rounded">left_panel_close</span>
 </button>
@@ -127,7 +128,7 @@
 <div class="job-hero__stats">
 <div class="job-hero__stat"><strong>12</strong><span>Pelamar baru</span></div>
 <div class="job-hero__stat"><strong data-current="5" data-quota-value="" data-total="8">5/8</strong><span>Kebutuhan terisi</span></div>
-<div class="job-hero__stat"><strong>Rp 150.000</strong><span>Upah dasar / pekerja</span></div>
+<div class="job-hero__stat"><strong data-job-wage="">Rp 170.000</strong><span>Upah per pekerja</span></div>
 <div class="job-hero__stat"><strong>2 hari</strong><span>Waktu menuju mulai</span></div>
 </div>
 </section>
@@ -178,7 +179,7 @@
                   </button>
 </div>
 <div class="applicant-list" id="applicants">
-<article class="applicant-card" data-applicant-card="" data-distance="2.4" data-name="Made Arya Putra" data-status="new" data-wage="Rp 156.000">
+<article class="applicant-card" data-applicant-card="" data-distance="2.4" data-name="Made Arya Putra" data-status="new" data-wage="Rp 170.000">
 <div class="applicant-person">
 <span class="avatar">MA</span>
 <div class="applicant-person__copy">
@@ -188,7 +189,7 @@
 </div>
 </div>
 <div class="applicant-fact"><span>Jarak</span><strong>2,4 km</strong></div>
-<div class="applicant-fact"><span>Upah jarak</span><strong>Rp 156.000</strong></div>
+<div class="applicant-fact"><span>Upah pekerjaan</span><strong>Rp 170.000</strong></div>
 <div class="applicant-fact"><span>Status</span><strong data-applicant-status-label="">Baru</strong></div>
 <span class="score" title="Skor kecocokan">96</span>
 <div class="applicant-actions">
@@ -197,7 +198,7 @@
 <button class="button button--primary button--small" data-hire-applicant="" type="button">Pilih</button>
 </div>
 </article>
-<article class="applicant-card" data-applicant-card="" data-distance="4.1" data-name="Komang Dedi" data-status="shortlisted" data-wage="Rp 160.000">
+<article class="applicant-card" data-applicant-card="" data-distance="4.1" data-name="Komang Dedi" data-status="shortlisted" data-wage="Rp 170.000">
 <div class="applicant-person">
 <span class="avatar">KD</span>
 <div class="applicant-person__copy">
@@ -207,7 +208,7 @@
 </div>
 </div>
 <div class="applicant-fact"><span>Jarak</span><strong>4,1 km</strong></div>
-<div class="applicant-fact"><span>Upah jarak</span><strong>Rp 160.000</strong></div>
+<div class="applicant-fact"><span>Upah pekerjaan</span><strong>Rp 170.000</strong></div>
 <div class="applicant-fact"><span>Status</span><strong data-applicant-status-label="">Dipertimbangkan</strong></div>
 <span class="score">93</span>
 <div class="applicant-actions">
@@ -216,7 +217,7 @@
 <button class="button button--primary button--small" data-hire-applicant="" type="button">Pilih</button>
 </div>
 </article>
-<article class="applicant-card" data-applicant-card="" data-distance="6.8" data-name="Kadek Surya" data-status="new" data-wage="Rp 165.000">
+<article class="applicant-card" data-applicant-card="" data-distance="6.8" data-name="Kadek Surya" data-status="new" data-wage="Rp 170.000">
 <div class="applicant-person">
 <span class="avatar">KS</span>
 <div class="applicant-person__copy">
@@ -226,7 +227,7 @@
 </div>
 </div>
 <div class="applicant-fact"><span>Jarak</span><strong>6,8 km</strong></div>
-<div class="applicant-fact"><span>Upah jarak</span><strong>Rp 165.000</strong></div>
+<div class="applicant-fact"><span>Upah pekerjaan</span><strong>Rp 170.000</strong></div>
 <div class="applicant-fact"><span>Status</span><strong data-applicant-status-label="">Baru</strong></div>
 <span class="score">91</span>
 <div class="applicant-actions">
@@ -235,7 +236,7 @@
 <button class="button button--primary button--small" data-hire-applicant="" type="button">Pilih</button>
 </div>
 </article>
-<article class="applicant-card" data-applicant-card="" data-distance="3.3" data-name="Wayan Raka" data-status="hired" data-wage="Rp 158.000">
+<article class="applicant-card" data-applicant-card="" data-distance="3.3" data-name="Wayan Raka" data-status="hired" data-wage="Rp 170.000">
 <div class="applicant-person">
 <span class="avatar">WR</span>
 <div class="applicant-person__copy">
@@ -245,12 +246,12 @@
 </div>
 </div>
 <div class="applicant-fact"><span>Jarak</span><strong>3,3 km</strong></div>
-<div class="applicant-fact"><span>Upah jarak</span><strong>Rp 158.000</strong></div>
+<div class="applicant-fact"><span>Upah pekerjaan</span><strong>Rp 170.000</strong></div>
 <div class="applicant-fact"><span>Status</span><strong data-applicant-status-label="">Terpilih</strong></div>
 <span class="score">89</span>
 <div class="applicant-actions">
 <button aria-label="Lihat profil" class="icon-button" data-demo-action="" data-demo-message="Profil Wayan Raka ditampilkan." data-demo-title="Profil dibuka" type="button"><span aria-hidden="true" class="material-symbols-rounded">visibility</span></button>
-<button aria-label="Lihat detail pekerja terpilih" class="icon-button" data-demo-action="" data-demo-message="Detail Wayan Raka sebagai pekerja terpilih ditampilkan." data-demo-title="Detail pilihan dibuka" type="button"><span aria-hidden="true" class="material-symbols-rounded">description</span></button>
+<button aria-label="Lihat bukti konfirmasi pekerjaan" class="icon-button" data-contract-action="" type="button"><span aria-hidden="true" class="material-symbols-rounded">contract</span></button>
 <button class="button button--outline button--small" disabled="" type="button">Dipilih</button>
 </div>
 </article>
@@ -264,7 +265,7 @@
 </div>
 </div>
 <div class="applicant-fact"><span>Jarak</span><strong>9,2 km</strong></div>
-<div class="applicant-fact"><span>Upah jarak</span><strong>Rp 170.000</strong></div>
+<div class="applicant-fact"><span>Upah pekerjaan</span><strong>Rp 170.000</strong></div>
 <div class="applicant-fact"><span>Status</span><strong data-applicant-status-label="">Baru</strong></div>
 <span class="score score--medium">82</span>
 <div class="applicant-actions">
@@ -285,23 +286,19 @@
 <div class="quota-ring__copy"><strong data-current="5" data-quota-value="" data-total="8">5/8</strong><span>Pekerja dipilih</span></div>
 </div>
 <div class="summary-list">
-<div class="summary-row"><span>Sudah dipilih</span><strong>5 pekerja</strong></div>
-<div class="summary-row"><span>Masih dibutuhkan</span><strong class="text-orange">3 pekerja</strong></div>
+<div class="summary-row"><span>Sudah dipilih</span><strong data-selected-count="">5 pekerja</strong></div>
+<div class="summary-row"><span>Masih dibutuhkan</span><strong class="text-orange" data-remaining-count="">3 pekerja</strong></div>
 <div class="summary-row"><span>Batas memilih pekerja</span><strong>21 Jul 2026</strong></div>
 </div>
 </div>
 </article>
 <article class="card" style="margin-top: 18px">
 <header class="card__header">
-<div class="card__header-copy"><h3 class="card-title">Ringkasan Upah</h3><p>Termasuk tambahan jarak tiap pelamar.</p></div>
+<div class="card__header-copy"><h3 class="card-title">Ringkasan Upah</h3><p>Upah berlaku sama untuk setiap pekerja dan tidak dipengaruhi jarak.</p></div>
 </header>
 <div class="card__body">
-<div class="summary-list">
-<div class="summary-row"><span>Upah dasar</span><strong>Rp 150.000</strong></div>
-<div class="summary-row"><span>Rata-rata tambahan jarak</span><strong>Rp 9.800</strong></div>
-<div class="summary-row"><span>Perkiraan total untuk 8 pekerja</span><strong>Rp 1.278.400</strong></div>
-</div>
-<div class="system-note system-note--compact"><span aria-hidden="true" class="material-symbols-rounded">handshake</span><span>Pembayaran dilakukan langsung antara pemberi kerja dan pekerja, di luar Mekard.</span></div>
+<div class="summary-list"><div class="summary-row"><span>Rekomendasi Mekard / pekerja</span><strong>Rp 170.000</strong></div><div class="summary-row"><span>Tambahan pemberi kerja</span><strong>Rp 0</strong></div><div class="summary-row"><span>Upah final / pekerja</span><strong data-final-wage="">Rp 170.000</strong></div><div class="summary-row"><span>Jumlah pekerja</span><strong>8 orang</strong></div><div class="summary-row"><span>Perkiraan total anggaran</span><strong data-total-budget="">Rp 1.360.000</strong></div><div class="summary-row"><span>Anggaran pekerja terpilih</span><strong data-selected-budget="">Rp 850.000</strong></div></div>
+<div class="system-note system-note--compact"><span aria-hidden="true" class="material-symbols-rounded">handshake</span><span>Jarak hanya ditampilkan sebagai pertimbangan pekerja. Pembayaran dilakukan langsung berdasarkan upah yang tercantum pada lowongan.</span></div>
 </div>
 </article>
 </aside>
@@ -314,16 +311,9 @@
 <div class="card__body"><p>Memindahkan semen, pasir, bata, dan material ringan dari area bongkar menuju tempat penyimpanan proyek. Pekerja mengikuti arahan mandor, menjaga area tetap aman, dan menggunakan alat pelindung yang disediakan.</p></div>
 </article>
 <article class="card detail-block">
-<header class="card__header"><div class="card__header-copy"><h3 class="card-title">Rincian Pekerjaan</h3><p>Rincian yang dipakai untuk saran upah dan pelaksanaan kerja.</p></div></header>
+<header class="card__header"><div class="card__header-copy"><h3 class="card-title">Rincian Pekerjaan</h3><p>Indikator objektif yang digunakan sistem untuk menghitung upah.</p></div></header>
 <div class="card__body">
-<div class="detail-list">
-<div><span>Kategori</span><strong>Angkut &amp; Pindahan</strong></div>
-<div><span>Keterampilan</span><strong>Terampil</strong></div>
-<div><span>Durasi</span><strong>5 jam</strong></div>
-<div><span>Risiko</span><strong>Sedang</strong></div>
-<div><span>Jadwal</span><strong>Normal</strong></div>
-<div><span>APD</span><strong>Disediakan</strong></div>
-</div>
+<div class="detail-list"><div><span>Kategori</span><strong>Angkut &amp; Pindahan</strong></div><div><span>Durasi kerja</span><strong>5 jam</strong></div><div><span>Aktivitas fisik</span><strong>Berat</strong></div><div><span>Berat objek</span><strong>Di atas 15 kg</strong></div><div><span>Ketinggian / kedalaman</span><strong>Level dasar</strong></div><div><span>Alat &amp; bahan kerja</span><strong>Level aman</strong></div><div><span>Kondisi udara &amp; ruang</span><strong>Cuaca langsung</strong></div><div><span>Waktu kerja</span><strong>Jam normal</strong></div><div><span>APD</span><strong>Disediakan</strong></div><div><span>Sertifikat khusus</span><strong>Tidak diperlukan</strong></div></div>
 </div>
 </article>
 <article class="card detail-block">
@@ -331,8 +321,8 @@
 <div class="card__body"><p>Jl. Mahendradata No. 18, Denpasar Barat, Bali. Masuk melalui gerbang proyek sebelah utara dan lapor kepada petugas keamanan sebelum menuju area bongkar.</p></div>
 </article>
 <article class="card detail-block">
-<header class="card__header"><div class="card__header-copy"><h3 class="card-title">Catatan Upah</h3><p>Hal yang perlu dibicarakan langsung dengan pekerja.</p></div></header>
-<div class="card__body"><p>Besaran upah ditampilkan di Mekard sebagai acuan. Cara dan waktu pembayaran disepakati langsung antara pemberi kerja dan pekerja di luar Mekard.</p></div>
+<header class="card__header"><div class="card__header-copy"><h3 class="card-title">Catatan Upah</h3><p>Ketentuan upah yang tercatat pada lowongan.</p></div></header>
+<div class="card__body"><p>Upah final adalah Rp 170.000 untuk setiap pekerja selama 5 jam kerja. Jarak pekerja tidak mengubah nominal upah. Cara dan waktu pembayaran disepakati langsung, sedangkan konfirmasi pekerjaan dicatat oleh Mekard.</p></div>
 </article>
 </div>
 </section>
@@ -347,7 +337,7 @@
 </div>
 <div class="timeline-item">
 <span class="timeline-item__icon"><span aria-hidden="true" class="material-symbols-rounded">payments</span></span>
-<div class="timeline-item__copy"><strong>Rekomendasi upah diperbarui</strong><span>Kompensasi jarak menyesuaikan lokasi pelamar terbaru.</span></div>
+<div class="timeline-item__copy"><strong>Rekomendasi upah diperbarui</strong><span>Estimasi diperbarui setelah indikator aktivitas fisik dan berat objek disesuaikan.</span></div>
 <time>17:10</time>
 </div>
 <div class="timeline-item">
@@ -371,16 +361,12 @@
 <div class="modal__body">
 <span aria-hidden="true" class="modal__icon material-symbols-rounded">person_check</span>
 <h2 id="hire-modal-title">Pilih pekerja ini?</h2>
-<p>Anda akan memilih <strong data-modal-name="">Pelamar</strong> untuk pekerjaan ini. Pastikan jadwal dan upah sudah dibicarakan langsung.</p>
-<div class="modal__summary">
-<div><span>Upah yang ditawarkan</span><strong data-modal-wage="">—</strong></div>
-<div><span>Jarak ke lokasi</span><strong data-modal-distance="">—</strong></div>
-<div><span>Pembayaran</span><strong class="text-orange">Diatur langsung</strong></div>
-</div>
+<p>Dengan memilih <strong data-modal-name="">Pelamar</strong>, Anda mengonfirmasi jadwal, rincian pekerjaan, dan upah yang tercantum. Sistem akan membuat catatan konfirmasi pekerjaan.</p>
+<div class="modal__summary"><div><span>Upah per pekerja</span><strong data-modal-wage="">—</strong></div><div><span>Durasi kerja</span><strong>5 jam</strong></div><div><span>Jarak ke lokasi</span><strong data-modal-distance="">—</strong></div><div><span>Catatan sistem</span><strong class="text-orange">Akan dibuat</strong></div></div>
 </div>
 <footer class="modal__footer">
 <button class="button button--outline" data-modal-close="" type="button">Batal</button>
-<button class="button button--primary" data-confirm-hire="" type="button"><span aria-hidden="true" class="material-symbols-rounded">check</span> Ya, Pilih Pekerja</button>
+<button class="button button--primary" data-confirm-hire="" type="button"><span aria-hidden="true" class="material-symbols-rounded">check</span> Konfirmasi &amp; Pilih</button>
 </footer>
 </section>
 </div>

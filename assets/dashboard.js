@@ -259,6 +259,42 @@
     });
   }
 
+
+
+  // Job list search and status filter
+  const jobRows = [...document.querySelectorAll("[data-job-row]")];
+  const jobSearch = document.querySelector("[data-job-search]");
+  const jobStatus = document.querySelector("[data-job-status]");
+  const jobResult = document.querySelector("[data-job-result]");
+  const jobEmpty = document.querySelector("[data-job-empty]");
+
+  const filterJobs = () => {
+    if (!jobRows.length) return;
+    const query = (jobSearch?.value || "").trim().toLowerCase();
+    const status = jobStatus?.value || "all";
+    let visible = 0;
+
+    jobRows.forEach((row) => {
+      const haystack = (row.dataset.jobSearchValue || row.textContent || "").toLowerCase();
+      const rowStatus = row.dataset.jobStatusValue || "";
+      const show = (!query || haystack.includes(query)) && (status === "all" || rowStatus === status);
+      row.hidden = !show;
+      if (show) visible += 1;
+    });
+
+    if (jobResult) jobResult.textContent = `${visible} lowongan ditampilkan`;
+    if (jobEmpty) jobEmpty.hidden = visible !== 0;
+  };
+
+  jobSearch?.addEventListener("input", filterJobs);
+  jobStatus?.addEventListener("change", filterJobs);
+  document.querySelector("[data-job-reset]")?.addEventListener("click", () => {
+    if (jobSearch) jobSearch.value = "";
+    if (jobStatus) jobStatus.value = "all";
+    filterJobs();
+  });
+  filterJobs();
+
   // Applicant search and filters
   const applicantSearches = [...document.querySelectorAll("[data-applicant-search]")];
   const statusFilter = document.querySelector("[data-applicant-status]");
@@ -311,8 +347,37 @@
   const modalBackdrop = document.querySelector("[data-modal-backdrop]");
   let selectedApplicantCard = null;
 
+  const getQuotaState = () => {
+    const quota = document.querySelector("[data-quota-value]");
+    return {
+      current: Number(quota?.dataset.current || 0),
+      total: Number(quota?.dataset.total || 0),
+    };
+  };
+
+  const updateQuotaSummary = (current, total, wagePerWorker) => {
+    document.querySelectorAll("[data-selected-count]").forEach((node) => {
+      node.textContent = `${current} pekerja`;
+    });
+    document.querySelectorAll("[data-remaining-count]").forEach((node) => {
+      node.textContent = `${Math.max(0, total - current)} pekerja`;
+    });
+    document.querySelectorAll("[data-selected-budget]").forEach((node) => {
+      node.textContent = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0,
+      }).format(current * wagePerWorker);
+    });
+  };
+
   function openModal(card) {
     if (!modalBackdrop || !card) return;
+    const quota = getQuotaState();
+    if (quota.total > 0 && quota.current >= quota.total) {
+      showToast("Kebutuhan sudah terpenuhi", "Tidak dapat memilih pekerja tambahan sebelum kuota diubah.");
+      return;
+    }
     selectedApplicantCard = card;
     const name = card.dataset.name || "Pelamar";
     const wage = card.dataset.wage || "-";
@@ -348,29 +413,68 @@
   document.querySelector("[data-confirm-hire]")?.addEventListener("click", () => {
     if (!selectedApplicantCard) return;
     const name = selectedApplicantCard.dataset.name || "Pelamar";
+    const wageText = selectedApplicantCard.dataset.wage || "Rp 0";
+    const wagePerWorker = Number(wageText.replace(/[^0-9]/g, "")) || 0;
+    const quota = getQuotaState();
+
+    if (quota.total > 0 && quota.current >= quota.total) {
+      closeModal();
+      showToast("Kebutuhan sudah terpenuhi", "Kuota pekerja untuk lowongan ini sudah penuh.");
+      return;
+    }
+
     selectedApplicantCard.dataset.status = "hired";
     selectedApplicantCard.querySelector("[data-applicant-status-label]")?.replaceChildren("Terpilih");
-    selectedApplicantCard.querySelector("[data-hire-applicant]")?.setAttribute("disabled", "disabled");
-    selectedApplicantCard.querySelector("[data-hire-applicant]")?.replaceChildren("Terpilih");
+
+    const hireButton = selectedApplicantCard.querySelector("[data-hire-applicant]");
+    if (hireButton) {
+      hireButton.setAttribute("disabled", "disabled");
+      hireButton.classList.remove("button--primary");
+      hireButton.classList.add("button--outline");
+      hireButton.replaceChildren("Dipilih");
+    }
+
+    const actions = selectedApplicantCard.querySelector(".applicant-actions");
+    if (actions && !actions.querySelector("[data-contract-action]")) {
+      const contractButton = document.createElement("button");
+      contractButton.type = "button";
+      contractButton.className = "icon-button";
+      contractButton.dataset.contractAction = "";
+      contractButton.setAttribute("aria-label", "Lihat bukti konfirmasi pekerjaan");
+      contractButton.innerHTML = '<span aria-hidden="true" class="material-symbols-rounded">contract</span>';
+      contractButton.addEventListener("click", () => {
+        showToast("Bukti konfirmasi dibuka", `Catatan konfirmasi MK-1048 untuk ${name} tersedia.`);
+      });
+      actions.insertBefore(contractButton, hireButton);
+    }
 
     const quotaValues = [...document.querySelectorAll("[data-quota-value]")];
     const quotaRing = document.querySelector("[data-quota-ring]");
-    if (quotaValues.length) {
-      const current = Number(quotaValues[0].dataset.current || 5) + 1;
-      const total = Number(quotaValues[0].dataset.total || 8);
-      quotaValues.forEach((quotaValue) => {
-        quotaValue.dataset.current = String(Math.min(current, total));
-        quotaValue.textContent = `${Math.min(current, total)}/${total}`;
-      });
-      if (quotaRing) {
-        const percentage = Math.min(100, (current / total) * 100);
-        quotaRing.style.background = `conic-gradient(var(--orange) 0 ${percentage}%, #edf0ee ${percentage}% 100%)`;
-      }
+    const current = Math.min(quota.current + 1, quota.total || quota.current + 1);
+    const total = quota.total || current;
+
+    quotaValues.forEach((quotaValue) => {
+      quotaValue.dataset.current = String(current);
+      quotaValue.textContent = `${current}/${total}`;
+    });
+
+    if (quotaRing) {
+      const percentage = Math.min(100, (current / total) * 100);
+      quotaRing.style.background = `conic-gradient(var(--orange) 0 ${percentage}%, #edf0ee ${percentage}% 100%)`;
     }
 
+    updateQuotaSummary(current, total, wagePerWorker);
     closeModal();
     filterApplicants();
-    showToast("Pekerja dipilih", `${name} ditambahkan ke daftar pekerja terpilih.`);
+    showToast("Pekerja dipilih", `${name} dipilih dan catatan konfirmasi pekerjaan telah dibuat.`);
+  });
+
+  document.querySelectorAll("[data-contract-action]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const card = button.closest("[data-applicant-card]");
+      const name = card?.dataset.name || "pekerja";
+      showToast("Bukti konfirmasi dibuka", `Catatan konfirmasi MK-1048 untuk ${name} ditampilkan.`);
+    });
   });
 
   // Generic prototype actions
